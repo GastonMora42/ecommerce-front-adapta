@@ -2,7 +2,7 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useState } from "react";
 import axios from "axios";
 
-const Pay = () => {
+const Pay = ({ products, cartProducts }) => {
   const [preferenceId, setPreferenceId] = useState(null);
 
   // Inicializar MercadoPago SDK
@@ -11,15 +11,13 @@ const Pay = () => {
   // Función para crear la preferencia
   const createPreference = async () => {
     try {
-      const response = await axios.post('/api/create-preference', {
-        items: [
-          {
-            title: 'Hongo recontra flipadisimo tio',
-            quantity: 1,
-            unit_price: 149000,
-          }
-        ]
-      });
+      const items = products.map(product => ({
+        title: product.title,
+        quantity: cartProducts.filter(id => id === product._id).length,
+        unit_price: product.price,
+      }));
+
+      const response = await axios.post('/api/create-preference', { items });
 
       const { id } = response.data;
       return id;
@@ -45,7 +43,9 @@ const Pay = () => {
   return (
     <div>
       <button onClick={handleBuy}>Comprar</button>
-      <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
+      {preferenceId && (
+        <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
+      )}
     </div>
   );
 };
