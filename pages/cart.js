@@ -7,7 +7,8 @@ import {CartContext} from "@/components/CartContext";
 import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
-import { initMercadoPago, Wallet } from '@mercadopago/sdk-react'
+import Pay from "@/components/Pay"
+
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -66,7 +67,7 @@ const CityHolder = styled.div`
   display:flex;
   gap: 5px;
 `;
-initMercadoPago('APP_USR-9072cbab-9c3f-4194-916b-75a780ca8a27', { locale: 'es-AR' })
+
 export default function CartPage() {
   const {cartProducts,addProduct,removeProduct,clearCart} = useContext(CartContext);
   const [products,setProducts] = useState([]);
@@ -101,13 +102,6 @@ export default function CartPage() {
   }
   function lessOfThisProduct(id) {
     removeProduct(id);
-  }
-  async function goToPayment() {
-    const response = await fetch('/api/checkout', {
-      method: 'POST'
-    });
-    const data = await response.json()
-    window.location.href = data.init_point;
   }
 
   let total = 0;
@@ -217,13 +211,9 @@ export default function CartPage() {
                      value={country}
                      name="country"
                      onChange={ev => setCountry(ev.target.value)}/>
-              <Button black block
-                      onClick={goToPayment}>
-                Continue to payment
-              </Button>
-              <div id="wallet_container"></div>
 
-<Wallet initialization={{ preferenceId: '1861272759-e6950028-d13a-44ba-aa6a-a774c1b2c5dc' }} customization={{ texts:{ valueProp: 'smart_option'}}} />
+              <Pay></Pay>
+            
 
             </Box>
           )}
