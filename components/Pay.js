@@ -2,7 +2,7 @@ import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
 import { useState } from "react";
 import axios from "axios";
 
-const Pay = ({ products, cartProducts }) => {
+const Pay = ({ products, cartProducts, orderData }) => {
   const [preferenceId, setPreferenceId] = useState(null);
 
   // Inicializar MercadoPago SDK
@@ -17,13 +17,21 @@ const Pay = ({ products, cartProducts }) => {
         unit_price: product.price,
       }));
 
+      // Crear preferencia en MercadoPago
       const response = await axios.post('/api/create-preference', { items });
-
       const { id } = response.data;
+
+      // Guardar la orden en la base de datos
+      await axios.post('/api/create-order', {
+        line_items: items,
+        ...orderData,
+        paid: false, // Asume que la orden no está pagada al momento de crearla
+      });
+
       return id;
     } catch (error) {
       console.error('Error al crear la preferencia:', error);
-      throw error; // Propaga el error para manejarlo en un nivel superior si es necesario
+      throw error;
     }
   };
 
@@ -36,7 +44,6 @@ const Pay = ({ products, cartProducts }) => {
       }
     } catch (error) {
       console.error('Error al manejar la compra:', error);
-      // Aquí puedes manejar el error según tus necesidades
     }
   };
 

@@ -1,4 +1,6 @@
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+import {mongooseConnect} from "@/lib/mongoose";
+import {Order} from "@/models/Order";
 
 // Configurar MercadoPago
 const client = new MercadoPagoConfig({ 
@@ -23,6 +25,7 @@ export default async function handler(req, res) {
       };
 
       const result = await preference.create({ body: preferenceBody });
+      
 
       // Debugging the result object
       console.log('MercadoPago create response:', result);

@@ -113,6 +113,15 @@ export default function CartPage() {
     total += price;
   }
 
+  const orderData = {
+    name,
+    email,
+    city,
+    postalCode,
+    streetAddress,
+    country
+  };
+
   return (
     <>
       <Header />
@@ -200,7 +209,7 @@ export default function CartPage() {
                      name="country"
                      onChange={ev => setCountry(ev.target.value)} />
 
-              <Pay products={products} cartProducts={cartProducts} />
+              <Pay products={products} cartProducts={cartProducts} orderData={orderData} />
             </Box>
           )}
         </ColumnsWrapper>
