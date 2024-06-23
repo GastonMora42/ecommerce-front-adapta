@@ -128,17 +128,17 @@ export default function CartPage() {
       <Center>
         <ColumnsWrapper>
           <Box>
-            <h2>Cart</h2>
+            <h2>Carrito</h2>
             {!cartProducts?.length && (
-              <div>Your cart is empty</div>
+              <div>Tu carrito esta vacio</div>
             )}
             {products?.length > 0 && (
               <Table>
                 <thead>
                   <tr>
-                    <th>Product</th>
-                    <th>Quantity</th>
-                    <th>Price</th>
+                    <th>Productos</th>
+                    <th>Cantidad</th>
+                    <th>Precio</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -175,9 +175,9 @@ export default function CartPage() {
           </Box>
           {!!cartProducts?.length && (
             <Box>
-              <h2>Order information</h2>
+              <h2>Informacion del pedido</h2>
               <Input type="text"
-                     placeholder="Name"
+                     placeholder="Nombre y Apellido"
                      value={name}
                      name="name"
                      onChange={ev => setName(ev.target.value)} />
@@ -188,23 +188,23 @@ export default function CartPage() {
                      onChange={ev => setEmail(ev.target.value)} />
               <CityHolder>
                 <Input type="text"
-                       placeholder="City"
+                       placeholder="Ciudad"
                        value={city}
                        name="city"
                        onChange={ev => setCity(ev.target.value)} />
                 <Input type="text"
-                       placeholder="Postal Code"
+                       placeholder="Codigo postal"
                        value={postalCode}
                        name="postalCode"
                        onChange={ev => setPostalCode(ev.target.value)} />
               </CityHolder>
               <Input type="text"
-                     placeholder="Street Address"
+                     placeholder="Calle"
                      value={streetAddress}
                      name="streetAddress"
                      onChange={ev => setStreetAddress(ev.target.value)} />
               <Input type="text"
-                     placeholder="Country"
+                     placeholder="Pais"
                      value={country}
                      name="country"
                      onChange={ev => setCountry(ev.target.value)} />
