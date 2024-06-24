@@ -7,7 +7,10 @@ import { CartContext } from "@/components/CartContext";
 import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
-import Pay from "@/components/Pay";
+import dynamic from "next/dynamic";
+
+// Carga dinámica del componente Pay
+const Pay = dynamic(() => import('@/components/Pay'), { ssr: false });
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -130,7 +133,7 @@ export default function CartPage() {
           <Box>
             <h2>Carrito</h2>
             {!cartProducts?.length && (
-              <div>Tu carrito esta vacio</div>
+              <div>Tu carrito está vacío</div>
             )}
             {products?.length > 0 && (
               <Table>
@@ -175,7 +178,7 @@ export default function CartPage() {
           </Box>
           {!!cartProducts?.length && (
             <Box>
-              <h2>Informacion del pedido</h2>
+              <h2>Información del pedido</h2>
               <Input type="text"
                      placeholder="Nombre y Apellido"
                      value={name}
@@ -193,7 +196,7 @@ export default function CartPage() {
                        name="city"
                        onChange={ev => setCity(ev.target.value)} />
                 <Input type="text"
-                       placeholder="Codigo postal"
+                       placeholder="Código postal"
                        value={postalCode}
                        name="postalCode"
                        onChange={ev => setPostalCode(ev.target.value)} />
@@ -204,7 +207,7 @@ export default function CartPage() {
                      name="streetAddress"
                      onChange={ev => setStreetAddress(ev.target.value)} />
               <Input type="text"
-                     placeholder="Pais"
+                     placeholder="País"
                      value={country}
                      name="country"
                      onChange={ev => setCountry(ev.target.value)} />
