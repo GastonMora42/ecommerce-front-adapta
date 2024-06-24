@@ -4,6 +4,9 @@ const nextConfig = {
   compiler: {
     styledComponents: true,
   },
+  experimental: {
+    esmExternals: 'loose', // Esta opción permite la compatibilidad con ESM
+  },
 }
 
 module.exports = nextConfig

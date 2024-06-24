@@ -1,12 +1,21 @@
-import { initMercadoPago, Wallet } from "@mercadopago/sdk-react";
-import { useState } from "react";
-import axios from "axios";
+import { useState, useEffect } from 'react';
+import dynamic from 'next/dynamic';
+import axios from 'axios';
+
+// Carga dinámica del componente Wallet de MercadoPago
+const Wallet = dynamic(() => import('@mercadopago/sdk-react').then(mod => mod.Wallet), { ssr: false });
 
 const Pay = ({ products, cartProducts, orderData }) => {
   const [preferenceId, setPreferenceId] = useState(null);
 
-  // Inicializar MercadoPago SDK
-  initMercadoPago('APP_USR-9072cbab-9c3f-4194-916b-75a780ca8a27', { locale: 'es-AR' });
+  useEffect(() => {
+    // Inicializar MercadoPago SDK en el cliente
+    const initMP = async () => {
+      const { initMercadoPago } = await import('@mercadopago/sdk-react');
+      initMercadoPago('APP_USR-9072cbab-9c3f-4194-916b-75a780ca8a27', { locale: 'es-AR' });
+    };
+    initMP();
+  }, []);
 
   // Función para crear la preferencia
   const createPreference = async () => {
