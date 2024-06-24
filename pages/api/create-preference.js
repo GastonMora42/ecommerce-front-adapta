@@ -1,19 +1,35 @@
 import { MercadoPagoConfig, Preference } from 'mercadopago';
-import {mongooseConnect} from "@/lib/mongoose";
-import {Order} from "@/models/Order";
+import { mongooseConnect } from "@/lib/mongoose";
+import { Order } from "@/models/Order";
 
 // Configurar MercadoPago
-const client = new MercadoPagoConfig({ 
-  accessToken: 'APP_USR-2070490052301144-061720-329a5aec1f647459f124e5273afbfd73-1861272759' 
+const client = new MercadoPagoConfig({
+  accessToken: 'APP_USR-2070490052301144-061720-329a5aec1f647459f124e5273afbfd73-1861272759'
 });
 
 const preference = new Preference(client);
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    try {
-      const { items } = req.body;
+    await mongooseConnect(); // Conectarse a la base de datos
 
+    try {
+      const { items, name, email, city, postalCode, streetAddress, country } = req.body;
+
+      // Crear la orden en la base de datos
+      const order = new Order({
+        line_items: items,
+        name,
+        email,
+        city,
+        postalCode,
+        streetAddress,
+        country,
+        paid: false, // Inicialmente no está pagada
+      });
+      await order.save();
+
+      // Crear la preferencia de MercadoPago
       const preferenceBody = {
         items,
         back_urls: {
@@ -22,10 +38,11 @@ export default async function handler(req, res) {
           pending: 'https://www.youtube.com/@onthecode'
         },
         auto_return: 'approved',
+        external_reference: order._id.toString(), // Pasar la referencia de la orden
+        notification_url: 'https://yourdomain.com/api/webhook', // URL del webhook
       };
 
       const result = await preference.create({ body: preferenceBody });
-      
 
       // Debugging the result object
       console.log('MercadoPago create response:', result);
