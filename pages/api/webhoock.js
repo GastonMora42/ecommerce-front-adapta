@@ -1,35 +1,39 @@
+export const config = {
+  runtime: 'edge',
+};
+
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
 
-export default async function handler(req, res) {
-  console.log('webhook handler invoked'); // Log inicial
+export default async function handler(req) {
   if (req.method === 'POST') {
-    if (!global.mongooseConnected) {
-      console.log('Connecting to MongoDB');
-      await mongooseConnect();
-      global.mongooseConnected = true;
-      console.log('Connected to MongoDB');
-    }
+    await mongooseConnect(); // Conectarse a la base de datos
 
     try {
-      const { id, type } = req.body;
-      console.log('Request body:', req.body); // Log de request body
+      const { id, status } = await req.json();
 
-      if (type === 'payment' && id) {
-        const order = await Order.findById(id);
-        if (order) {
-          order.paid = true; 
-          await order.save();
-          console.log('Order updated to paid:', order); // Log de orden actualizada
-        }
+      // Buscar la orden y actualizar su estado
+      const order = await Order.findOne({ _id: id });
+
+      if (order) {
+        order.paid = status === 'approved';
+        await order.save();
       }
 
-      res.status(200).json({ received: true });
+      return new Response(JSON.stringify({ success: true }), {
+        headers: { 'Content-Type': 'application/json' },
+      });
     } catch (error) {
       console.error('Error handling webhook:', error);
-      res.status(500).json({ error: 'Error handling webhook' });
+      return new Response(JSON.stringify({ error: 'Error handling webhook' }), {
+        status: 500,
+        headers: { 'Content-Type': 'application/json' },
+      });
     }
   } else {
-    res.status(405).json({ error: 'Method not allowed' });
+    return new Response(JSON.stringify({ error: 'Method not allowed' }), {
+      status: 405,
+      headers: { 'Content-Type': 'application/json' },
+    });
   }
 }

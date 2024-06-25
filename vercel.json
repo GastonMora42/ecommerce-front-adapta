@@ -1,8 +1,20 @@
 {
-    "functions": {
-      "pages/api/create-preference.js": {
-        "maxDuration": 40
-      }
+  "functions": {
+    "api/create-preference.js": {
+      "runtime": "edge"
+    },
+    "api/webhook.js": {
+      "runtime": "edge"
     }
-  }
-  
+  },
+  "rewrites": [
+    {
+      "source": "/api/create-preference",
+      "destination": "/api/create-preference.js"
+    },
+    {
+      "source": "/api/webhook",
+      "destination": "/api/webhook.js"
+    }
+  ]
+}
