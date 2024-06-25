@@ -2,7 +2,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
 
-// Configurar MercadoPago usando una variable de entorno para la clave de acceso
+// Configurar MercadoPago usando una variable de entorno para la clave de accesos
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
 });
