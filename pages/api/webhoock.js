@@ -1,6 +1,4 @@
-export const config = {
-  runtime: 'edge',
-};
+export const maxDuration = 20;
 
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
