@@ -1,20 +1,19 @@
 {
+  "version": 2,
   "functions": {
     "api/create-preference.js": {
-      "runtime": "edge"
+      "runtime": "nodejs14.x",
+      "memory": 512,
+      "maxDuration": 20
     },
     "api/webhook.js": {
-      "runtime": "edge"
+      "runtime": "nodejs14.x",
+      "memory": 512,
+      "maxDuration": 20
     }
   },
-  "rewrites": [
-    {
-      "source": "/api/create-preference",
-      "destination": "/api/create-preference.js"
-    },
-    {
-      "source": "/api/webhook",
-      "destination": "/api/webhook.js"
-    }
+  "routes": [
+    { "src": "/api/create-preference", "dest": "/api/create-preference.js" },
+    { "src": "/api/webhook", "dest": "/api/webhook.js" }
   ]
 }
