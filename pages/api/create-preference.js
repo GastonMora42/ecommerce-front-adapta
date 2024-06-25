@@ -2,16 +2,20 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
 
-// Configurar MercadoPago
+// Configurar MercadoPago usando una variable de entorno para la clave de acceso
 const client = new MercadoPagoConfig({
-  accessToken: 'APP_USR-2070490052301144-061720-329a5aec1f647459f124e5273afbfd73-1861272759'
+  accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN
 });
 
 const preference = new Preference(client);
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    await mongooseConnect(); // Conectarse a la base de datos
+    // Conectarse a la base de datos una vez al inicio
+    if (!global.mongooseConnected) {
+      await mongooseConnect();
+      global.mongooseConnected = true;
+    }
 
     try {
       const { items, name, email, city, postalCode, streetAddress, country } = req.body;
@@ -44,9 +48,7 @@ export default async function handler(req, res) {
 
       const result = await preference.create({ body: preferenceBody });
 
-      // Debugging the result object
-      console.log('MercadoPago create response:', result);
-
+      // Verificar y responder con el ID de la preferencia creada
       if (result && result.id) {
         res.status(200).json({ id: result.id });
       } else {
