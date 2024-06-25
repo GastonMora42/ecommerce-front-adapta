@@ -1,7 +1,10 @@
 export const maxDuration = 20;
 
 import { MercadoPagoConfig, Preference } from 'mercadopago';
+import { mongooseConnect } from "@/lib/mongoose";
+import { Order } from "@/models/Order";
 
+// Configurar MercadoPago
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN, // Usar variables de entorno
 });
@@ -9,10 +12,30 @@ const client = new MercadoPagoConfig({
 const preference = new Preference(client);
 
 export default async function handler(req, res) {
+  console.log('create-preference handler invoked');
   if (req.method === 'POST') {
     try {
-      const { items } = req.body;
+      // Conectar a MongoDB
+      await mongooseConnect();
+      console.log('Connected to MongoDB');
 
+      const { items, name, email, city, postalCode, streetAddress, country } = req.body;
+
+      // Crear la orden en la base de datos
+      const order = new Order({
+        line_items: items,
+        name,
+        email,
+        city,
+        postalCode,
+        streetAddress,
+        country,
+        paid: false,
+      });
+      await order.save();
+      console.log('Order saved:', order);
+
+      // Crear la preferencia de MercadoPago
       const preferenceBody = {
         items,
         back_urls: {
@@ -21,10 +44,11 @@ export default async function handler(req, res) {
           pending: 'https://www.youtube.com/@onthecode',
         },
         auto_return: 'approved',
+        external_reference: order._id.toString(), // Pasar la referencia de la orden
+        notification_url: 'https://adaptalabs/api/webhook', // URL del webhook
       };
 
       const result = await preference.create({ body: preferenceBody });
-
       console.log('MercadoPago create response:', result);
 
       if (result && result.id) {

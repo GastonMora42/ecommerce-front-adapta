@@ -1,0 +1,13 @@
+{
+    "functions": {
+      "api/create-preference.js": {
+        "runtime": "edge",
+        "maxDuration": 20
+      },
+      "api/webhook.js": {
+        "runtime": "edge",
+        "maxDuration": 20
+      }
+    }
+  }
+  
