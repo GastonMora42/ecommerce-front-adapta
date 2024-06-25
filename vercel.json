@@ -1,7 +1,7 @@
 {
     "functions": {
       "pages/api/create-preference.js": {
-        "maxDuration": 60 
+        "maxDuration": 200
       }
     }
   }
