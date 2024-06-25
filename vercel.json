@@ -1,6 +1,6 @@
 {
     "functions": {
-      "api/**/*.js": {
+      "pages/api/create-preference.js": {
         "maxDuration": 60 
       }
     }
