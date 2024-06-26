@@ -1,4 +1,6 @@
-export const maxDuration = 20;
+export const config = {
+  runtime: 'edge'
+}
 
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
