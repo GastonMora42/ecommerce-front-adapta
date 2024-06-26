@@ -1,13 +1,21 @@
 {
+    "version": 2,
     "functions": {
       "api/create-preference.js": {
-        "runtime": "edge",
-        "maxDuration": 20
+        "runtime": "edge"
+      },
+      "api/new-products.js": {
+        "runtime": "edge"
       },
       "api/webhook.js": {
-        "runtime": "edge",
-        "maxDuration": 20
+        "runtime": "edge"
       }
-    }
-  }
-  
+    },
+    "routes": [
+      {
+        "src": "/api/(.*)",
+        "dest": "/api/$1",
+        "methods": ["GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS"]
+      }
+    ]
+  }  
