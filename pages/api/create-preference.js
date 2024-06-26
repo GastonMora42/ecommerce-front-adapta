@@ -1,7 +1,3 @@
-export const config = {
-  runtime: 'edge'
-}
-
 import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
