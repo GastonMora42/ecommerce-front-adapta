@@ -12,7 +12,7 @@ const Pay = ({ products, cartProducts, orderData }) => {
     // Inicializar MercadoPago SDK en el cliente
     const initMP = async () => {
       const { initMercadoPago } = await import('@mercadopago/sdk-react');
-      initMercadoPago('APP_USR-9072cbab-9c3f-4194-916b-75a780ca8a27', { locale: 'es-AR' });
+      initMercadoPago('APP_USR-c204ac6d-8963-4825-92c8-986e67f93b15', { locale: 'es-AR' });
     };
     initMP();
   }, []);

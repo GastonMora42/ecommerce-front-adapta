@@ -4,7 +4,7 @@ import { Order } from "@/models/Order";
 
 // Configurar MercadoPago
 const client = new MercadoPagoConfig({
-  accessToken: 'APP_USR-2070490052301144-061720-329a5aec1f647459f124e5273afbfd73-1861272759'
+  accessToken: 'APP_USR-2048944057968799-061720-e4f946a4acfbb99604e26c2ef4a8bf60-187439342'
 });
 
 const preference = new Preference(client);
@@ -60,4 +60,3 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Method not allowed' });
   }
 }
-n
