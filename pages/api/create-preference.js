@@ -16,7 +16,7 @@ export default async function handler(req, res) {
     try {
       const { items, name, email, city, postalCode, streetAddress, country } = req.body;
 
-      // Crear la orden en la base de datos
+      // Crear la orden en la base de datoss
       const order = new Order({
         line_items: items,
         name,
