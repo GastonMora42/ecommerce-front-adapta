@@ -2,7 +2,7 @@ import { MercadoPagoConfig, Preference } from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
 
-// Configurar MercadoPago
+// Configurar MercadoPagosss
 const client = new MercadoPagoConfig({
   accessToken: process.env.MERCADO_PAGO_ACCESS_TOKEN,
 });
