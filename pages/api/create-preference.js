@@ -11,7 +11,7 @@ const preference = new Preference(client);
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    await mongooseConnect(); // Conectarse a la base de datos
+    await mongooseConnect(); // Conectarse a la base de datoss
 
     try {
       const { items, name, email, city, postalCode, streetAddress, country } = req.body;
@@ -60,3 +60,4 @@ export default async function handler(req, res) {
     res.status(405).json({ error: 'Method not allowed' });
   }
 }
+n
