@@ -20,7 +20,7 @@ const WhiteBox = styled(Link)`
   border-radius: 10px;
   img{
     max-width: 100%;
-    max-height: 80px;
+    max-height: 135px;
   }
 `;
 
@@ -75,7 +75,7 @@ export default function ProductBox({_id,title,description,price,images}) {
             ${price}
           </Price>
           <Button block onClick={() => addProduct(_id)} primary outline>
-            Add to cart
+            Añadir al carrito
           </Button>
         </PriceRow>
       </ProductInfoBox>
