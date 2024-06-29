@@ -59,7 +59,7 @@ const Pay = ({ products, cartProducts, orderData }) => {
     }
   };
 
-  // Manejar la acción de compra
+  // Manejar la acción de compras
   const handleBuy = async () => {
     try {
       const id = await createPreference();
