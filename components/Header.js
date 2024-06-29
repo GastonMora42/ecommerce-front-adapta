@@ -8,12 +8,7 @@ import BarsIcon from "@/components/icons/Bars";
 const StyledHeader = styled.header`
   background-color: #222;
 `;
-const Logo = styled(Link)`
-  color:#fff;
-  text-decoration:none;
-  position: relative;
-  z-index: 3;
-`;
+
 const Wrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -41,13 +36,19 @@ const StyledNav = styled.nav`
 `;
 const NavLink = styled(Link)`
   display: block;
-  color:#aaa;
-  text-decoration:none;
+  color: white;
+  text-decoration: none;
+  margin-top: 9px;
   padding: 10px 0;
+  font-size: 100%; /* Tamaño similar al de un h1 */
+  font-weight: bold; /* Grosor similar al de un h1 */
+  font-family: "Montserrat", sans-serif;
   @media screen and (min-width: 768px) {
-    padding:0;
+    padding: 0;
   }
 `;
+
+
 const NavButton = styled.button`
   background-color: transparent;
   width: 30px;
@@ -62,6 +63,19 @@ const NavButton = styled.button`
   }
 `;
 
+const Logo = styled(Link)`
+  color: #fff;
+  text-decoration: none;
+  position: relative;
+  z-index: 3;
+
+  img {
+    width: 150px; /* Ajusta el tamaño según sea necesario */
+    height: auto; /* Mantiene la proporción de la imagen */
+  }
+`;
+
+
 export default function Header() {
   const {cartProducts} = useContext(CartContext);
   const [mobileNavActive,setMobileNavActive] = useState(false);
@@ -69,11 +83,13 @@ export default function Header() {
     <StyledHeader>
       <Center>
         <Wrapper>
-          <Logo href={'/'}>ADAPTA</Logo>
+          <Logo href={'/'}>
+  <img src="/titulo-adapta.png" alt="img-titulo" className="img-titulo"/>
+</Logo>
           <StyledNav mobileNavActive={mobileNavActive}>
             <NavLink href={'/'}>Inicio</NavLink>
             <NavLink href={'/products'}>Todos los productos</NavLink>
-            <NavLink href={'/info'}>Fungi-Pedia</NavLink>
+            
             <NavLink href={'/cart'}>Tu carrito({cartProducts.length})</NavLink>
           </StyledNav>
           <NavButton onClick={() => setMobileNavActive(prev => !prev)}>

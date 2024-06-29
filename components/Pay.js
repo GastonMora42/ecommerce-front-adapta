@@ -1,9 +1,24 @@
 import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
+import styled from 'styled-components';
 
 // Carga dinámica del componente Wallet de MercadoPago
 const Wallet = dynamic(() => import('@mercadopago/sdk-react').then(mod => mod.Wallet), { ssr: false });
+
+const StyledButton = styled.button`
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 10px 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
 
 const Pay = ({ products, cartProducts, orderData }) => {
   const [preferenceId, setPreferenceId] = useState(null);
@@ -56,9 +71,15 @@ const Pay = ({ products, cartProducts, orderData }) => {
     }
   };
 
+  useEffect(() => {
+    if (!preferenceId) {
+      handleBuy();
+    }
+  }, [preferenceId]);
+
   return (
     <div>
-      <button onClick={handleBuy}>Comprar</button>
+      {!preferenceId && <StyledButton onClick={handleBuy}>Continuar con la compra</StyledButton>}
       {preferenceId && (
         <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
       )}

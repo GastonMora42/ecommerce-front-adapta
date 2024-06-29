@@ -67,6 +67,19 @@ const CityHolder = styled.div`
   gap: 5px;
 `;
 
+const StyledButton = styled.button`
+  border-radius: 10px;
+  background-color: white;
+  color: black;
+  text-align: center;
+  padding: 10px 20px;
+  border: 1px solid black;
+  cursor: pointer;
+  margin-top: 20px;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+`;
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
@@ -77,6 +90,7 @@ export default function CartPage() {
   const [streetAddress, setStreetAddress] = useState('');
   const [country, setCountry] = useState('');
   const [isSuccess, setIsSuccess] = useState(false);
+  const [isFormComplete, setIsFormComplete] = useState(false);
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -107,6 +121,18 @@ export default function CartPage() {
     removeProduct(id);
   }
 
+  function validateFields() {
+    return name && email && city && postalCode && streetAddress && country;
+  }
+
+  function handleBuyClick() {
+    if (!validateFields()) {
+      alert("Tienes que llenar todos los campos");
+    } else {
+      setIsFormComplete(true);
+    }
+  }
+
   let total = 0;
   for (const productId of cartProducts) {
     const price = products.find(p => p._id === productId)?.price || 0;
@@ -130,7 +156,7 @@ export default function CartPage() {
           <Box>
             <h2>Carrito</h2>
             {!cartProducts?.length && (
-              <div>Tu carrito esta vacio</div>
+              <div>Tu carrito está vacío</div>
             )}
             {products?.length > 0 && (
               <Table>
@@ -151,13 +177,11 @@ export default function CartPage() {
                         {product.title}
                       </ProductInfoCell>
                       <td>
-                        <Button
-                          onClick={() => lessOfThisProduct(product._id)}>-</Button>
+                        <Button onClick={() => lessOfThisProduct(product._id)}>-</Button>
                         <QuantityLabel>
                           {cartProducts.filter(id => id === product._id).length}
                         </QuantityLabel>
-                        <Button
-                          onClick={() => moreOfThisProduct(product._id)}>+</Button>
+                        <Button onClick={() => moreOfThisProduct(product._id)}>+</Button>
                       </td>
                       <td>
                         ${cartProducts.filter(id => id === product._id).length * product.price}
@@ -175,41 +199,51 @@ export default function CartPage() {
           </Box>
           {!!cartProducts?.length && (
             <Box>
-              <h2>Informacion del pedido</h2>
+              <h2>Información del pedido</h2>
               <Input type="text"
                      placeholder="Nombre y Apellido"
                      value={name}
                      name="name"
-                     onChange={ev => setName(ev.target.value)} />
+                     onChange={ev => setName(ev.target.value)}
+                     required />
               <Input type="text"
                      placeholder="Email"
                      value={email}
                      name="email"
-                     onChange={ev => setEmail(ev.target.value)} />
+                     onChange={ev => setEmail(ev.target.value)}
+                     required />
               <CityHolder>
                 <Input type="text"
                        placeholder="Ciudad"
                        value={city}
                        name="city"
-                       onChange={ev => setCity(ev.target.value)} />
+                       onChange={ev => setCity(ev.target.value)}
+                       required />
                 <Input type="text"
-                       placeholder="Codigo postal"
+                       placeholder="Código postal"
                        value={postalCode}
                        name="postalCode"
-                       onChange={ev => setPostalCode(ev.target.value)} />
+                       onChange={ev => setPostalCode(ev.target.value)}
+                       required />
               </CityHolder>
               <Input type="text"
                      placeholder="Calle"
                      value={streetAddress}
                      name="streetAddress"
-                     onChange={ev => setStreetAddress(ev.target.value)} />
+                     onChange={ev => setStreetAddress(ev.target.value)}
+                     required />
               <Input type="text"
-                     placeholder="Pais"
+                     placeholder="País"
                      value={country}
                      name="country"
-                     onChange={ev => setCountry(ev.target.value)} />
+                     onChange={ev => setCountry(ev.target.value)}
+                     required />
 
-              <Pay products={products} cartProducts={cartProducts} orderData={orderData} />
+              {isFormComplete ? (
+                <Pay products={products} cartProducts={cartProducts} orderData={orderData} />
+              ) : (
+                <StyledButton onClick={handleBuyClick}>Continuar con la compra</StyledButton>
+              )}
             </Box>
           )}
         </ColumnsWrapper>

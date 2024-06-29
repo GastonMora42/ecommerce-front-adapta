@@ -1,33 +1,35 @@
 import Center from "@/components/Center";
 import styled from "styled-components";
-import Button from "@/components/Button";
 import ButtonLink from "@/components/ButtonLink";
-import CartIcon from "@/components/icons/CartIcon";
-import {useContext} from "react";
-import {CartContext} from "@/components/CartContext";
 
 const Bg = styled.div`
   background-color: #222;
-  color:#fff;
+  background-image: url('/portada-web-adapta.png'); 
+  background-size:  max-width: 300%; max-height: 200px;
+  background-position: center; /* Centra la imagen */
+  color: #fff;
   padding: 50px 0;
 `;
+
 const Title = styled.h1`
-  margin:0;
-  font-weight:normal;
-  font-size:1.5rem;
+  margin: 0;
+  font-weight: normal;
+  font-size: 1.5rem;
   @media screen and (min-width: 768px) {
-    font-size:3rem;
+    font-size: 3rem;
   }
 `;
+
 const Desc = styled.p`
-  color:#aaa;
-  font-size:.8rem;
+  color: #aaa;
+  font-size: .8rem;
 `;
+
 const ColumnsWrapper = styled.div`
   display: grid;
   grid-template-columns: 1fr;
   gap: 40px;
-  img{
+  img {
     max-width: 100%;
     max-height: 200px;
     display: block;
@@ -41,26 +43,24 @@ const ColumnsWrapper = styled.div`
     div:nth-child(1) {
       order: 0;
     }
-    img{
+    img {
       max-width: 100%;
     }
   }
 `;
+
 const Column = styled.div`
   display: flex;
   align-items: center;
 `;
+
 const ButtonsWrapper = styled.div`
   display: flex;
-  gap:10px;
-  margin-top:25px;
+  gap: 10px;
+  margin-top: 25px;
 `;
 
-export default function Featured({products}) {
-  const {addProduct} = useContext(CartContext);
-  function addFeaturedToCart() {
-    addProduct(products);
-  }
+export default function Featured({ products }) {
   return (
     <Bg>
       <Center>
@@ -68,19 +68,15 @@ export default function Featured({products}) {
           <Column>
             <div>
               <Title>Adapta</Title>
-              <Desc>Bienvenido al mundo fungi</Desc>
+              <h2>Bienvenido al mundo fungi</h2>
               <ButtonsWrapper>
-                <ButtonLink href={'/products' } outline={1} white={1}>Mas productos</ButtonLink>
-                <Button white onClick={addFeaturedToCart}>
-                  <CartIcon />
-                  Añadir al carrito
-                </Button>
+                <ButtonLink href={'/products'} outline={1} white={1}>Conoce todos nuestros productos</ButtonLink>
               </ButtonsWrapper>
             </div>
           </Column>
           <Column>
-  <img src="/sticker-hongo.png" alt=""/>
-</Column>
+            <img src="/sticker-hongo.png" alt=""/>
+          </Column>
         </ColumnsWrapper>
       </Center>
     </Bg>
