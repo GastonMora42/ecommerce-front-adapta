@@ -33,9 +33,9 @@ export default async function handler(req, res) {
       const preferenceBody = {
         items,
         back_urls: {
-          success: 'https://www.youtube.com/@onthecode',
-          failure: 'https://www.youtube.com/@onthecode',
-          pending: 'https://www.youtube.com/@onthecode'
+          success: 'https://www.adaptalabs.com',
+          failure: 'https://www.adaptalabs.com',
+          pending: 'https://www.adaptalabs.com'
         },
         auto_return: 'approved',
         external_reference: order._id.toString(), // Pasar la referencia de la orden
