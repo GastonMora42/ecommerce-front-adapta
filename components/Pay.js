@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
 import axios from 'axios';
 import styled from 'styled-components';
+import { useRouter } from 'next/router';
 
 // Carga dinámica del componente Wallet de MercadoPago
 const Wallet = dynamic(() => import('@mercadopago/sdk-react').then(mod => mod.Wallet), { ssr: false });
@@ -14,14 +15,27 @@ const StyledButton = styled.button`
   padding: 10px 20px;
   border: 1px solid black;
   cursor: pointer;
-  margin-top: 20px;
+  margin-top: 15px;
   display: block;
   margin-left: auto;
   margin-right: auto;
+
+  &.transfer-button {
+    background-color: #00aaff;
+    color: white;
+    border: 1px solid #0077cc;
+  }
+`;
+
+const DiscountText = styled.p`
+  font-size: 0.8rem;
+  text-align: center;
+  color: grey;
 `;
 
 const Pay = ({ products, cartProducts, orderData }) => {
   const [preferenceId, setPreferenceId] = useState(null);
+  const router = useRouter();
 
   useEffect(() => {
     // Inicializar MercadoPago SDK en el cliente
@@ -77,12 +91,20 @@ const Pay = ({ products, cartProducts, orderData }) => {
     }
   }, [preferenceId]);
 
+  const handleTransferClick = () => {
+    router.push('/transferencia-instrucciones');
+  };
+
   return (
     <div>
       {!preferenceId && <StyledButton onClick={handleBuy}>Continuar con la compra</StyledButton>}
       {preferenceId && (
         <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
       )}
+      <StyledButton className="transfer-button" onClick={handleTransferClick}>
+        Transferencia bancaria
+      </StyledButton>
+      <DiscountText>10% de descuento</DiscountText>
     </div>
   );
 };

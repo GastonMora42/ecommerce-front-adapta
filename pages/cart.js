@@ -25,6 +25,22 @@ const Box = styled.div`
   padding: 30px;
 `;
 
+const InfoContainer = styled.div`
+  background-color: #f8f9fa; // Fondo gris claro
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Sombra sutil
+  margin: 20px 0;
+`;
+
+// Define los párrafos estilizados
+const InfoText = styled.p`
+  color: #333; // Texto en gris oscuro
+  font-size: 1rem;
+  line-height: 1.5;
+  margin: 10px 0;
+`;
+
 const ProductInfoCell = styled.td`
   padding: 10px 0;
 `;
@@ -244,6 +260,12 @@ export default function CartPage() {
               ) : (
                 <StyledButton onClick={handleBuyClick}>Continuar con la compra</StyledButton>
               )}
+
+<InfoContainer>
+      <InfoText>Envio a acordar una vez realizada la compra via Whatsapp</InfoText>
+      <InfoText>Whatsapp: +54 9 2993 28-9265</InfoText>
+    </InfoContainer>
+
             </Box>
           )}
         </ColumnsWrapper>
