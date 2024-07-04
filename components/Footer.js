@@ -59,9 +59,9 @@ const Footer = () => {
           </Logo>
         <FooterText>&copy; {new Date().getFullYear()} Adapta. Todos los derechos reservados.</FooterText>
         <FooterLinks>
-          <a href="/">Política de Privacidad</a>
-          <a href="/">Términos de Servicio</a>
-          <a href="/">Contacto</a>
+          <Link href="/">Política de Privacidad</Link>
+          <Link href="/">Términos de Servicio</Link>
+          <Link href="/">Contacto</Link>
         </FooterLinks>
       </FooterContent>
     </FooterContainer>
