@@ -35,7 +35,6 @@ const ColumnsWrapper = styled.div`
   gap: 40px;
   img {
     max-width: 80%; /* Reducir el tamaño máximo de la imagen al 80% del contenedor */
-    max-height: 150px; /* Reducir la altura máxima de la imagen */
     display: block;
     margin: 0 auto;
   }

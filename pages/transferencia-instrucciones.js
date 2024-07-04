@@ -124,7 +124,7 @@ const TransferenciaInstrucciones = () => {
             Aprobación ⏰: Los comprobantes se aprueban de lunes a viernes en horario laboral.
           </InfoText>
           <InfoText>
-            Si tenes alguna duda o necesitas asistencia adicional, no dudes en contactarnos vía Whatsapp.
+            Si tenes alguna duda o necesitas asistencia adicional, no dudes en contactarnos vía Whatsapp.  +54 9 2993 28-9265
           </InfoText>
         </Container>
 
