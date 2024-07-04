@@ -8,6 +8,10 @@ import axios from "axios";
 import Table from "@/components/Table";
 import Input from "@/components/Input";
 import Pay from "@/components/Pay";
+import { useRouter } from "next/router";
+import Footer from "@/components/Footer"; // Importamos el Footer
+
+
 
 const ColumnsWrapper = styled.div`
   display: grid;
@@ -31,6 +35,12 @@ const InfoContainer = styled.div`
   border-radius: 10px;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Sombra sutil
   margin: 20px 0;
+`;
+
+const DiscountText = styled.p`
+  font-size: 0.8rem;
+  text-align: center;
+  color: grey;
 `;
 
 // Define los párrafos estilizados
@@ -84,18 +94,19 @@ const CityHolder = styled.div`
 `;
 
 const StyledButton = styled.button`
-  border-radius: 10px;
-  background-color: white;
-  color: black;
-  text-align: center;
-  padding: 10px 20px;
-  border: 1px solid black;
-  cursor: pointer;
-  margin-top: 20px;
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+border-radius: 10px;
+background-color: #00aaff; /* Azul */
+color: white;
+text-align: center;
+padding: 10px 20px;
+border: 1px solid #0077cc;
+cursor: pointer;
+margin-top: 15px;
+display: block;
+margin-left: auto;
+margin-right: auto;
 `;
+
 export default function CartPage() {
   const { cartProducts, addProduct, removeProduct, clearCart } = useContext(CartContext);
   const [products, setProducts] = useState([]);
@@ -105,8 +116,8 @@ export default function CartPage() {
   const [postalCode, setPostalCode] = useState('');
   const [streetAddress, setStreetAddress] = useState('');
   const [country, setCountry] = useState('');
-  const [isSuccess, setIsSuccess] = useState(false);
   const [isFormComplete, setIsFormComplete] = useState(false);
+  const router = useRouter();
 
   useEffect(() => {
     if (cartProducts.length > 0) {
@@ -124,8 +135,8 @@ export default function CartPage() {
       return;
     }
     if (window?.location.href.includes('success')) {
-      setIsSuccess(true);
       clearCart();
+      setIsFormComplete(false); // Resetear el estado del formulario
     }
   }, []);
 
@@ -138,14 +149,33 @@ export default function CartPage() {
   }
 
   function validateFields() {
-    return name && email && city && postalCode && streetAddress && country;
+    return name && email && city && postalCode && streetAddress && country && cartProducts.length > 0;
   }
 
-  function handleBuyClick() {
+  function handleBuyClick(paymentMethod) {
     if (!validateFields()) {
-      alert("Tienes que llenar todos los campos");
+      alert("Tienes que llenar todos los campos y seleccionar productos");
     } else {
-      setIsFormComplete(true);
+      if (paymentMethod === 'mercadoPago') {
+        // Lógica para Mercado Pago (si es necesario)
+        // Puedes llamar a una función o componente para generar la preferencia y luego redireccionar
+        // Ejemplo (suponiendo que Pay genera la preferencia):
+        setIsFormComplete(true);
+      } else if (paymentMethod === 'transferenciaBancaria') {
+        router.push({
+          pathname: '/transferencia-instrucciones',
+          query: {
+            products: JSON.stringify(products),
+            name,
+            email,
+            city,
+            postalCode,
+            streetAddress,
+            country,
+            total // Asegúrate de pasar el total correctamente
+          }
+        });
+      }
     }
   }
 
@@ -258,18 +288,23 @@ export default function CartPage() {
               {isFormComplete ? (
                 <Pay products={products} cartProducts={cartProducts} orderData={orderData} />
               ) : (
-                <StyledButton onClick={handleBuyClick}>Continuar con la compra</StyledButton>
+                <>
+                  <StyledButton onClick={() => handleBuyClick('mercadoPago')}>Pagar con Mercado Pago</StyledButton>
+                  <StyledButton onClick={() => handleBuyClick('transferenciaBancaria')}>Pagar por Transferencia Bancaria</StyledButton>
+                  <DiscountText>10% de descuento</DiscountText>
+                </>
               )}
 
-<InfoContainer>
-      <InfoText>Envio a acordar una vez realizada la compra via Whatsapp</InfoText>
-      <InfoText>Whatsapp: +54 9 2993 28-9265</InfoText>
-    </InfoContainer>
+              <InfoContainer>
+                <InfoText>Envío a acordar una vez realizada la compra vía Whatsapp:</InfoText>
+                <InfoText>Cel: +54 9 2993 28-9265</InfoText>
+              </InfoContainer>
 
             </Box>
           )}
         </ColumnsWrapper>
       </Center>
+      <Footer />
     </>
   );
 }

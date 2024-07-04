@@ -1,12 +1,13 @@
 import Center from "@/components/Center";
 import styled from "styled-components";
 import ButtonLink from "@/components/ButtonLink";
+import Image from "next/image"; // Importa la imagen de Next.js para optimización
 
 const Bg = styled.div`
   background-color: #222;
-  background-image: url('/portada-web-adapta.png'); 
-  background-size:  max-width: 300%; max-height: 200px;
-  background-position: center; /* Centra la imagen */
+  background-image: url('/portada-web-adapta.png');
+  background-size: cover;
+  background-position: center;
   color: #fff;
   padding: 50px 0;
 `;
@@ -15,49 +16,50 @@ const Title = styled.h1`
   margin: 0;
   font-weight: normal;
   font-size: 1.5rem;
+  text-align: center;
   @media screen and (min-width: 768px) {
     font-size: 3rem;
   }
 `;
 
-const Desc = styled.p`
-  color: #aaa;
-  font-size: .8rem;
+const Subtitle = styled.h2`
+  margin: 10px 0;
+  font-size: 1.2rem;
+  text-align: center;
 `;
 
 const ColumnsWrapper = styled.div`
-  display: grid;
-  grid-template-columns: 1fr;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 40px;
   img {
-    max-width: 100%;
-    max-height: 200px;
+    max-width: 80%; /* Reducir el tamaño máximo de la imagen al 80% del contenedor */
+    max-height: 150px; /* Reducir la altura máxima de la imagen */
     display: block;
     margin: 0 auto;
   }
-  div:nth-child(1) {
-    order: 2;
-  }
   @media screen and (min-width: 768px) {
-    grid-template-columns: 1.1fr 0.9fr;
-    div:nth-child(1) {
-      order: 0;
-    }
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
     img {
-      max-width: 100%;
+      max-width: 50%;
+      max-height: none;
     }
   }
-`;
-
-const Column = styled.div`
-  display: flex;
-  align-items: center;
 `;
 
 const ButtonsWrapper = styled.div`
   display: flex;
+  flex-direction: column;
+  align-items: center;
   gap: 10px;
   margin-top: 25px;
+  @media screen and (min-width: 768px) {
+    flex-direction: row;
+    margin-top: 0;
+  }
 `;
 
 export default function Featured({ products }) {
@@ -65,18 +67,14 @@ export default function Featured({ products }) {
     <Bg>
       <Center>
         <ColumnsWrapper>
-          <Column>
-            <div>
-              <Title>Adapta</Title>
-              <h2>Bienvenido al mundo fungi</h2>
-              <ButtonsWrapper>
-                <ButtonLink href={'/products'} outline={1} white={1}>Conoce todos nuestros productos</ButtonLink>
-              </ButtonsWrapper>
-            </div>
-          </Column>
-          <Column>
-            <img src="/sticker-hongo.png" alt=""/>
-          </Column>
+          <div>
+            <Title>Adapta</Title>
+            <Subtitle>Bienvenido al mundo fungi</Subtitle>
+            <ButtonsWrapper>
+              <ButtonLink href={'/products'} outline={1} white={1}>Conoce todos nuestros productos</ButtonLink>
+            </ButtonsWrapper>
+          </div>
+          <Image src="/sticker-hongo.png" alt="Sticker de hongo" width={300} height={300} />
         </ColumnsWrapper>
       </Center>
     </Bg>

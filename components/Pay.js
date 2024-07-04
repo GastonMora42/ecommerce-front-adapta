@@ -9,22 +9,16 @@ const Wallet = dynamic(() => import('@mercadopago/sdk-react').then(mod => mod.Wa
 
 const StyledButton = styled.button`
   border-radius: 10px;
-  background-color: white;
-  color: black;
+  background-color: #00aaff; /* Azul */
+  color: white;
   text-align: center;
   padding: 10px 20px;
-  border: 1px solid black;
+  border: 1px solid #0077cc;
   cursor: pointer;
   margin-top: 15px;
   display: block;
   margin-left: auto;
   margin-right: auto;
-
-  &.transfer-button {
-    background-color: #00aaff;
-    color: white;
-    border: 1px solid #0077cc;
-  }
 `;
 
 const DiscountText = styled.p`
@@ -35,6 +29,7 @@ const DiscountText = styled.p`
 
 const Pay = ({ products, cartProducts, orderData }) => {
   const [preferenceId, setPreferenceId] = useState(null);
+  const [buttonGenerated, setButtonGenerated] = useState(false); // Estado para controlar si se ha generado el botón de Mercado Pago
   const router = useRouter();
 
   useEffect(() => {
@@ -79,6 +74,7 @@ const Pay = ({ products, cartProducts, orderData }) => {
       const id = await createPreference();
       if (id) {
         setPreferenceId(id);
+        setButtonGenerated(true); // Marcar que se ha generado el botón de Mercado Pago
       }
     } catch (error) {
       console.error('Error al manejar la compra:', error);
@@ -86,25 +82,19 @@ const Pay = ({ products, cartProducts, orderData }) => {
   };
 
   useEffect(() => {
-    if (!preferenceId) {
+    if (!preferenceId && !buttonGenerated) {
       handleBuy();
     }
-  }, [preferenceId]);
-
-  const handleTransferClick = () => {
-    router.push('/transferencia-instrucciones');
-  };
+  }, [preferenceId, buttonGenerated]);
 
   return (
     <div>
-      {!preferenceId && <StyledButton onClick={handleBuy}>Continuar con la compra</StyledButton>}
+      {!preferenceId && !buttonGenerated && (
+        <StyledButton onClick={handleBuy}>Pagar con Mercado Pago</StyledButton>
+      )}
       {preferenceId && (
         <Wallet initialization={{ preferenceId }} customization={{ texts: { valueProp: 'smart_option' } }} />
       )}
-      <StyledButton className="transfer-button" onClick={handleTransferClick}>
-        Transferencia bancaria
-      </StyledButton>
-      <DiscountText>10% de descuento</DiscountText>
     </div>
   );
 };

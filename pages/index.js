@@ -3,6 +3,8 @@ import Featured from "@/components/Featured";
 import {Product} from "@/models/Product";
 import {mongooseConnect} from "@/lib/mongoose";
 import NewProducts from "@/components/NewProducts";
+import Footer from "@/components/Footer"; // Importamos el Footer
+
 
 export default function HomePage({featuredProduct,newProducts}) {
   return (
@@ -10,6 +12,7 @@ export default function HomePage({featuredProduct,newProducts}) {
       <Header />
       <Featured product={featuredProduct} />
       <NewProducts products={newProducts} />
+      <Footer />
     </div>
   );
 }

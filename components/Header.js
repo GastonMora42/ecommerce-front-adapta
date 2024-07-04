@@ -8,6 +8,12 @@ import Notificacion from "@/components/Notificacion"; // Importamos el component
 
 const StyledHeader = styled.header`
   background-color: #222;
+  color: white;
+  padding: 5px 0;
+  text-align: center;
+  position: sticky;
+  top: 0;
+  z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
 `;
 
 const Wrapper = styled.div`
