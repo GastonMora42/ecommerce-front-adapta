@@ -25,7 +25,7 @@ export default async function handler(req, res) {
         postalCode,
         streetAddress,
         country,
-        notification_url: 'https://adaptalabs.com/pages/api/webhooks', // URL del webhook
+        notification_url: 'https://adaptalabs.com/pages/api/webhoock', // URL del webhook
         paid: false, // Inicialmente no está pagada
       });
       await order.save();
@@ -40,7 +40,7 @@ export default async function handler(req, res) {
         },
         auto_return: 'approved',
         external_reference: order._id.toString(), // Pasar la referencia de la orden
-        notification_url: 'https://adaptalabs.com/pages/api/webhooks', // URL del webhook
+        notification_url: 'https://adaptalabs.com/pages/api/webhoock', // URL del webhook
       };
 
       const result = await preference.create({ body: preferenceBody });
