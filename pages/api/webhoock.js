@@ -10,21 +10,23 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     await mongooseConnect();
 
-    const rawBody = JSON.stringify(req.body);
-    const signature = req.headers['x-mp-signature'];
-    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
-
-    const hmac = crypto.createHmac('sha256', webhookSecret);
-    hmac.update(rawBody);
-    const hash = hmac.digest('hex');
-
-    if (hash !== signature) {
-      return res.status(401).json({ error: 'Unauthorized request' });
-    }
-
-    const { type, data } = req.body;
-
     try {
+      // Verifica la firma del webhook
+      const rawBody = JSON.stringify(req.body);
+      const signature = req.headers['x-mp-signature'];
+      const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+
+      const hmac = crypto.createHmac('sha256', webhookSecret);
+      hmac.update(rawBody);
+      const hash = hmac.digest('hex');
+
+      if (hash !== signature) {
+        console.error('Invalid webhook signature');
+        return res.status(401).json({ error: 'Unauthorized request' });
+      }
+
+      const { type, data } = req.body;
+
       if (type === 'payment') {
         const paymentId = data.id;
 
@@ -41,9 +43,18 @@ export default async function handler(req, res) {
             if (payment.body.status === 'approved') {
               order.paid = true;
               await order.save();
+              console.log(`Order ${orderId} updated to paid.`);
+            } else {
+              console.log(`Order ${orderId} not paid. Status: ${payment.body.status}`);
             }
+          } else {
+            console.error(`Order ${orderId} not found.`);
           }
+        } else {
+          console.error('Payment or external reference not found.');
         }
+      } else {
+        console.error('Invalid type in webhook notification.');
       }
 
       res.status(200).send('OK');
