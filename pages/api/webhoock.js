@@ -11,20 +11,23 @@ export default async function handler(req, res) {
     await mongooseConnect();
 
     try {
-      // Verifica la firma del webhook
+      // Verificar firma si es necesario (opcional)
       const rawBody = JSON.stringify(req.body);
-      const signature = req.headers['x-mp-signature'];
+      const signature = req.headers['x-mp-signature']; // Asegúrate de que este encabezado esté siendo enviado por MercadoPago
       const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
 
-      const hmac = crypto.createHmac('sha256', webhookSecret);
-      hmac.update(rawBody);
-      const hash = hmac.digest('hex');
+      if (webhookSecret) {
+        const hmac = crypto.createHmac('sha256', webhookSecret);
+        hmac.update(rawBody);
+        const hash = hmac.digest('hex');
 
-      if (hash !== signature) {
-        console.error('Invalid webhook signature');
-        return res.status(401).json({ error: 'Unauthorized request' });
+        if (hash !== signature) {
+          console.error('Invalid webhook signature');
+          return res.status(401).json({ error: 'Unauthorized request' });
+        }
       }
 
+      // Procesar la notificación
       const { type, data } = req.body;
 
       if (type === 'payment') {
