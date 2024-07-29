@@ -11,12 +11,12 @@ export default async function handler(req, res) {
     await mongooseConnect();
 
     const { type, data } = req.body;
-
+g
     try {
       if (type === 'payment') {
         const paymentId = data.id;
 
-        // Obtener detalles del pago desde MercadoPago
+        // Obtener detalles del pago desde MercadoPagos
         const response = await mercadopago.payment.get(paymentId);
 
         if (response && response.body && response.body.external_reference) {
