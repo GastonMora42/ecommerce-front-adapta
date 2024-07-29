@@ -1,10 +1,6 @@
 {
     "rewrites": [
-      { "source": "/pages/api/(.*)", "destination": "pages//api/$1" }
-    ],
-    "functions": {
-      "pages/api/webhook.js": {
-        "methods": ["POST"]
-      }
-    }
-  }  
+      { "source": "/api/(.*)", "destination": "/api/$1" }
+    ]
+  }
+  
