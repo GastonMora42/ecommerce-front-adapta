@@ -1,5 +1,10 @@
+import mercadopago from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
-import { Order } from "@/models/Order";
+import Order from "@/models/Order";
+
+mercadopago.configure({
+  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
+});
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -12,16 +17,16 @@ export default async function handler(req, res) {
         const paymentId = data.id;
 
         // Obtener detalles del pago desde MercadoPago
-        const payment = await client.payment.get(paymentId);
+        const response = await mercadopago.payment.get(paymentId);
 
-        if (payment && payment.external_reference) {
+        if (response && response.body && response.body.external_reference) {
           // Buscar la orden correspondiente en la base de datos
-          const orderId = payment.external_reference;
+          const orderId = response.body.external_reference;
           const order = await Order.findById(orderId);
 
           if (order) {
             // Actualizar el estado de pago de la orden
-            if (payment.status === 'approved') {
+            if (response.body.status === 'approved') {
               order.paid = true;
               await order.save();
             }

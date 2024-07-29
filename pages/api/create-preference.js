@@ -1,22 +1,19 @@
-import { MercadoPagoConfig, Preference } from 'mercadopago';
+import mercadopago from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
-import { Order } from "@/models/Order";
+import Order from "@/models/Order";
 
-// Configurar MercadoPago
-const client = new MercadoPagoConfig({
-  accessToken: 'APP_USR-2048944057968799-061720-e4f946a4acfbb99604e26c2ef4a8bf60-187439342'
+mercadopago.configure({
+  access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
 });
-
-const preference = new Preference(client);
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
-    await mongooseConnect(); // Conectarse a la base de datoss
+    await mongooseConnect(); // Conectarse a la base de datos
 
     try {
       const { items, name, email, city, postalCode, streetAddress, country } = req.body;
 
-      // Crear la orden en la base de datoss
+      // Crear la orden en la base de datos
       const order = new Order({
         line_items: items,
         name,
@@ -30,25 +27,26 @@ export default async function handler(req, res) {
       await order.save();
 
       // Crear la preferencia de MercadoPago
-      const preferenceBody = {
-        items,
+      const preference = {
+        items: items.map(item => ({
+          title: item.name,
+          unit_price: item.price,
+          quantity: item.quantity,
+        })),
         back_urls: {
           success: 'https://www.adaptalabs.com',
           failure: 'https://www.adaptalabs.com',
-          pending: 'https://www.adaptalabs.com'
+          pending: 'https://www.adaptalabs.com',
         },
         auto_return: 'approved',
         external_reference: order._id.toString(), // Pasar la referencia de la orden
-        notification_url: 'https://adaptalabs.xyz/orders', // URL del webhook
+        notification_url: 'https://adaptalabs.com/pages/api/webhoock', // URL del webhook
       };
 
-      const result = await preference.create({ body: preferenceBody });
+      const response = await mercadopago.preferences.create(preference);
 
-      // Debugging the result object
-      console.log('MercadoPago create response:', result);
-
-      if (result && result.id) {
-        res.status(200).json({ id: result.id });
+      if (response && response.body && response.body.id) {
+        res.status(200).json({ id: response.body.id });
       } else {
         throw new Error('Invalid response from MercadoPago');
       }
