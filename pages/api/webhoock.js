@@ -1,6 +1,7 @@
 import mercadopago from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import Order from "@/models/Order";
+import crypto from 'crypto';
 
 mercadopago.configure({
   access_token: process.env.MERCADOPAGO_ACCESS_TOKEN,
@@ -10,14 +11,30 @@ export default async function handler(req, res) {
   if (req.method === 'POST') {
     await mongooseConnect();
 
+    // Obtener la clave secreta de las variables de entorno
+    const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+
+    // Leer el body de la petición y las cabeceras necesarias
+    const rawBody = JSON.stringify(req.body);
+    const signature = req.headers['x-mp-signature'];
+
+    // Verificar la autenticidad de la notificación
+    const hmac = crypto.createHmac('sha256', webhookSecret);
+    hmac.update(rawBody);
+    const hash = hmac.digest('hex');
+
+    if (hash !== signature) {
+      return res.status(401).json({ error: 'Unauthorized request' });
+    }
+
     const { type, data } = req.body;
-g
+
     try {
       if (type === 'payment') {
         const paymentId = data.id;
 
-        // Obtener detalles del pago desde MercadoPagos
-        const response = await mercadopago.payment.get(paymentId);
+        // Obtener detalles del pago desde MercadoPago
+        const response = await mercadopago.payment.findById(paymentId);
 
         if (response && response.body && response.body.external_reference) {
           // Buscar la orden correspondiente en la base de datos
