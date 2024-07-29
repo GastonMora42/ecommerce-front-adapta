@@ -1,7 +1,10 @@
+import MercadoPago from 'mercadopago';
 import { mongooseConnect } from "@/lib/mongoose";
 import { Order } from "@/models/Order";
-import MercadoPago from "mercadopago";
-import crypto from "crypto";
+import crypto from 'crypto';
+
+// Configura MercadoPago con tu access token
+const client = new MercadoPago({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN });
 
 export default async function handler(req, res) {
   if (req.method === 'POST') {
@@ -25,11 +28,8 @@ export default async function handler(req, res) {
       if (type === 'payment') {
         const paymentId = data.id;
 
-        // Inicializa MercadoPago con tu access token
-        MercadoPago.configurations.setAccessToken(process.env.MERCADOPAGO_ACCESS_TOKEN);
-
         // Obtener detalles del pago desde MercadoPago
-        const payment = await MercadoPago.payment.findById(paymentId);
+        const payment = await client.payment.findById(paymentId);
 
         if (payment && payment.body.external_reference) {
           // Buscar la orden correspondiente en la base de datos
