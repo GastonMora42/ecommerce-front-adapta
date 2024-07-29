@@ -27,7 +27,7 @@ export default async function handler(req, res) {
 
         // Inicializa MercadoPago con tu access token
         MercadoPago.configurations.setAccessToken(process.env.MERCADOPAGO_ACCESS_TOKEN);
-        
+
         // Obtener detalles del pago desde MercadoPago
         const payment = await MercadoPago.payment.findById(paymentId);
 
