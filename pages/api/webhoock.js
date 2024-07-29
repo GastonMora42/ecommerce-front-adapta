@@ -30,10 +30,10 @@ export default async function handler(req, res) {
       if (type === 'payment') {
         const paymentId = data.id;
 
-        // Obtener detalles del pago desde MercadoPago
-        const payment = await client.payment.findById(paymentId);
+        // Obtener detalles del pago desde MercadoPago usando el método get
+        const payment = await client.payment.get({ id: paymentId });
 
-        if (payment && payment.body.external_reference) {
+        if (payment && payment.body && payment.body.external_reference) {
           // Buscar la orden correspondiente en la base de datos
           const orderId = payment.body.external_reference;
           const order = await Order.findById(orderId);
