@@ -25,6 +25,7 @@ export default async function handler(req, res) {
         postalCode,
         streetAddress,
         country,
+        notification_url: 'https://adaptalabs.com/pages/api/webhooks', // URL del webhook
         paid: false, // Inicialmente no está pagada
       });
       await order.save();
