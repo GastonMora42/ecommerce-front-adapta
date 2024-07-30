@@ -43,6 +43,10 @@ export default async function handler(req, res) {
         notification_url: 'https://adaptalabs.com/pages/api/webhoock', // URL del webhook
       };
 
+      app.post("/webhoock", async function (req, res) {
+       console.log("Funciona el webhoock")
+      })
+
       const result = await preference.create({ body: preferenceBody });
 
       // Debugging the result object
