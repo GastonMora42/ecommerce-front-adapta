@@ -19,7 +19,7 @@ mongoose.connect('MONGODB_URI', {
   console.error('Error connecting to MongoDB:', error);
 });
 
-router.post('/webhook', async (req, res) => {
+router.post('/webhoock', async (req, res) => {
   const { type, data } = req.body;
 
   if (type === 'payment') {
