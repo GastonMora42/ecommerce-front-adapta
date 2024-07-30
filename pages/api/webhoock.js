@@ -6,7 +6,7 @@ import { Order } from '@/models/Order';
 
 const router = express.Router();
 
-const secret = '9a19b941cd90dca875d7e02d234b1b90926b3d69ba4613d500d1366c10067e6c'; // Reemplaza esto con tu clave secreta de MercadoPago
+const secret = '838424a0aedb6c89e8d9c7cdca48fe66963aed87a942f124f578bae4311d4d70'; // Reemplaza esto con tu clave secreta de MercadoPago
 
 MercadoPago.configure({
   access_token: 'APP_USR-2048944057968799-061720-e4f946a4acfbb99604e26c2ef4a8bf60-187439342'
