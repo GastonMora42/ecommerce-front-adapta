@@ -1,7 +1,7 @@
 import express from 'express';
 import mongoose from 'mongoose';
 import MercadoPago from 'mercadopago';
-import { Order } from './models/Order.js';
+import { Order } from '@/models/Order';
 
 const router = express.Router();
 
