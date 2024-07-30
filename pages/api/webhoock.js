@@ -2,7 +2,7 @@ import express from 'express';
 import mongoose from 'mongoose';
 import crypto from 'crypto';
 import MercadoPago from 'mercadopago';
-import { Order } from '@/models/Order.js';
+import { Order } from '@/models/Order';
 
 const router = express.Router();
 
@@ -22,7 +22,7 @@ mongoose.connect('MONGODB_URI', {
   console.error('Error connecting to MongoDB:', error);
 });
 
-router.post('/webhoock', async (req, res) => {
+router.post('/webhook', async (req, res) => {
   const headers = req.headers;
   const xSignature = headers['x-signature'];
   const xRequestId = headers['x-request-id'];

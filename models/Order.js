@@ -12,7 +12,7 @@ const OrderSchema = new Schema({
   postalCode: String,
   streetAddress: String,
   country: String,
-  paid: Boolean,
+  paid: { type: Boolean, default: false },
 }, {
   timestamps: true,
 });
