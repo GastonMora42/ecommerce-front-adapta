@@ -39,7 +39,7 @@ export default async function handler(req, res) {
         },
         auto_return: 'approved',
         external_reference: order._id.toString(), // Pasar la referencia de la orden
-        notification_url: 'https://adaptalabs.com/pages/api/webhoock?source_news=webhooks', // URL del webhook
+        notification_url: 'https://yourdomain.com/api/webhoock?source_news=webhooks', // URL del webhook
       };
 
       const result = await preference.create({ body: preferenceBody });
