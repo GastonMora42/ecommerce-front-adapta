@@ -1,74 +1,55 @@
+import express from 'express';
+import mongoose from 'mongoose';
 import MercadoPago from 'mercadopago';
-import { mongooseConnect } from "@/lib/mongoose";
-import { Order } from "@/models/Order";
-import crypto from 'crypto';
+import { Order } from './models/Order.js';
 
-// Configura MercadoPago con tu access token
-const client = new MercadoPago({ accessToken: process.env.MERCADOPAGO_ACCESS_TOKEN });
+const router = express.Router();
 
-export default async function handler(req, res) {
-  if (req.method === 'POST') {
-    await mongooseConnect();
+MercadoPago.configure({
+  access_token: 'APP_USR-2048944057968799-061720-e4f946a4acfbb99604e26c2ef4a8bf60-187439342'
+});
+
+// Conectar a MongoDB
+mongoose.connect('MONGODB_URI', {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+}).then(() => {
+  console.log('Connected to MongoDB');
+}).catch((error) => {
+  console.error('Error connecting to MongoDB:', error);
+});
+
+router.post('/webhoock', async (req, res) => {
+  const { type, data } = req.body;
+
+  if (type === 'payment') {
+    const paymentId = data.id;
 
     try {
-      // Verificar firma si es necesario (opcional)
-      const rawBody = JSON.stringify(req.body);
-      const signature = req.headers['x-mp-signature']; // Asegúrate de que este encabezado esté siendo enviado por MercadoPago
-      const webhookSecret = process.env.MERCADOPAGO_WEBHOOK_SECRET;
+      // Obtener detalles del pago desde MercadoPago
+      const payment = await MercadoPago.payment.findById(paymentId);
 
-      if (webhookSecret) {
-        const hmac = crypto.createHmac('sha256', webhookSecret);
-        hmac.update(rawBody);
-        const hash = hmac.digest('hex');
+      if (payment && payment.body.external_reference) {
+        const orderId = payment.body.external_reference;
+        const order = await Order.findById(orderId);
 
-        if (hash !== signature) {
-          console.error('Invalid webhook signature');
-          return res.status(401).json({ error: 'Unauthorized request' });
-        }
-      }
-
-      // Procesar la notificación
-      const { type, data } = req.body;
-
-      if (type === 'payment') {
-        const paymentId = data.id;
-
-        // Obtener detalles del pago desde MercadoPago usando el método get
-        const payment = await client.payment.get({ id: paymentId });
-
-        if (payment && payment.body && payment.body.external_reference) {
-          // Buscar la orden correspondiente en la base de datos
-          const orderId = payment.body.external_reference;
-          const order = await Order.findById(orderId);
-
-          if (order) {
-            // Actualizar el estado de pago de la orden
-            if (payment.body.status === 'approved') {
-              order.paid = true;
-              await order.save();
-              console.log(`Order ${orderId} updated to paid.`);
-            } else {
-              console.log(`Order ${orderId} not paid. Status: ${payment.body.status}`);
-            }
-          } else {
-            console.error(`Order ${orderId} not found.`);
+        if (order) {
+          // Actualizar el estado de pago de la orden
+          if (payment.body.status === 'approved') {
+            order.paid = true;
+            await order.save();
           }
-        } else {
-          console.error('Payment or external reference not found.');
         }
-      } else {
-        console.error('Invalid type in webhook notification.');
       }
 
-      // Responder con 200 OK
       res.status(200).send('OK');
     } catch (error) {
       console.error('Error processing webhook:', error);
       res.status(500).json({ error: 'Error processing webhook' });
     }
   } else {
-    // Responder con Method Not Allowed si no es POST
-    res.setHeader('Allow', ['POST']);
-    res.status(405).json({ error: 'Method Not Allowed' });
+    res.status(400).send('Event type not supported');
   }
-}
+});
+
+export default router;
