@@ -1,43 +1,30 @@
-import express from 'express';
-import mongoose from 'mongoose';
-import MercadoPago from 'mercadopago';
-import { Order } from '@/models/Order';
+import { mongooseConnect } from "@/lib/mongoose";
+import { Order } from "@/models/Order";
 
-const router = express.Router();
+export default async function handler(req, res) {
+  if (req.method === 'POST') {
+    await mongooseConnect();
 
-MercadoPago.configure({
-  access_token: 'APP_USR-2048944057968799-061720-e4f946a4acfbb99604e26c2ef4a8bf60-187439342'
-});
-
-// Conectar a MongoDB
-mongoose.connect('MONGODB_URI', {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
-}).then(() => {
-  console.log('Connected to MongoDB');
-}).catch((error) => {
-  console.error('Error connecting to MongoDB:', error);
-});
-
-router.post('/webhoock', async (req, res) => {
-  const { type, data } = req.body;
-
-  if (type === 'payment') {
-    const paymentId = data.id;
+    const { type, data } = req.body;
 
     try {
-      // Obtener detalles del pago desde MercadoPago
-      const payment = await MercadoPago.payment.findById(paymentId);
+      if (type === 'payment') {
+        const paymentId = data.id;
 
-      if (payment && payment.body.external_reference) {
-        const orderId = payment.body.external_reference;
-        const order = await Order.findById(orderId);
+        // Obtener detalles del pago desde MercadoPago
+        const payment = await client.payment.get(paymentId);
 
-        if (order) {
-          // Actualizar el estado de pago de la orden
-          if (payment.body.status === 'approved') {
-            order.paid = true;
-            await order.save();
+        if (payment && payment.external_reference) {
+          // Buscar la orden correspondiente en la base de datos
+          const orderId = payment.external_reference;
+          const order = await Order.findById(orderId);
+
+          if (order) {
+            // Actualizar el estado de pago de la orden
+            if (payment.status === 'approved') {
+              order.paid = true;
+              await order.save();
+            }
           }
         }
       }
@@ -48,8 +35,6 @@ router.post('/webhoock', async (req, res) => {
       res.status(500).json({ error: 'Error processing webhook' });
     }
   } else {
-    res.status(400).send('Event type not supported');
+    res.status(405).json({ error: 'Method not allowed' });
   }
-});
-
-export default router;
+}

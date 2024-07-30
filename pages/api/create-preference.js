@@ -25,7 +25,6 @@ export default async function handler(req, res) {
         postalCode,
         streetAddress,
         country,
-        notification_url: 'https://adaptalabs.com/pages/api/webhoock', // URL del webhook
         paid: false, // Inicialmente no está pagada
       });
       await order.save();
@@ -42,10 +41,6 @@ export default async function handler(req, res) {
         external_reference: order._id.toString(), // Pasar la referencia de la orden
         notification_url: 'https://adaptalabs.com/pages/api/webhoock?source_news=webhooks', // URL del webhook
       };
-
-      app.post("/webhoock", async function (req, res) {
-       console.log("Funciona el webhoock")
-      })
 
       const result = await preference.create({ body: preferenceBody });
 
