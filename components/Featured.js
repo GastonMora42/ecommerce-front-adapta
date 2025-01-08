@@ -1,81 +1,101 @@
 import Center from "@/components/Center";
 import styled from "styled-components";
 import ButtonLink from "@/components/ButtonLink";
-import Image from "next/image"; // Importa la imagen de Next.js para optimización
+import Image from "next/image";
 
 const Bg = styled.div`
-  background-color: #222;
-  background-image: url('/portada-web-adapta.png');
-  background-size: cover;
-  background-position: center;
-  color: #fff;
-  padding: 50px 0;
+ background-image: url('/fondo-adapta.png');
+ background-size: cover;
+ background-position: center;
+ background-attachment: fixed;
+ min-height: 80vh;
+ position: relative;
+ padding: 80px 0;
+ 
+ &::before {
+   content: '';
+   position: absolute;
+   top: 0;
+   left: 0;
+   right: 0;
+   bottom: 0;
+   background: rgba(0, 0, 0, 0.6);
+ }
 `;
 
 const Title = styled.h1`
-  margin: 0;
-  font-weight: normal;
-  font-size: 1.5rem;
-  text-align: center;
-  @media screen and (min-width: 768px) {
-    font-size: 3rem;
-  }
+ margin: 0;
+ font-weight: bold;
+ font-size: 2rem;
+ color: #fff;
+ position: relative;
+ text-align: center;
+ max-width: 800px;
+ margin: 0 auto;
+ @media screen and (min-width: 768px) {
+   font-size: 3rem;
+ }
 `;
 
-const Subtitle = styled.h2`
-  margin: 10px 0;
-  font-size: 1.2rem;
-  text-align: center;
+const LogoWrapper = styled.div`
+ margin: 20px auto;
+ max-width: 180px;
+ img {
+   width: 100%;
+   height: auto;
+ }
 `;
 
-const ColumnsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 40px;
-  img {
-    max-width: 80%; /* Reducir el tamaño máximo de la imagen al 80% del contenedor */
-    display: block;
-    margin: 0 auto;
-  }
-  @media screen and (min-width: 768px) {
-    flex-direction: row;
-    justify-content: space-between;
-    align-items: center;
-    img {
-      max-width: 50%;
-      max-height: none;
-    }
-  }
+const ContentWrapper = styled.div`
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ position: relative;
+ padding: 20px;
 `;
 
 const ButtonsWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 10px;
-  margin-top: 25px;
-  @media screen and (min-width: 768px) {
-    flex-direction: row;
-    margin-top: 0;
-  }
+ display: flex;
+ justify-content: center;
+ gap: 20px;
+ margin-top: 40px;
+
+ a {
+   background-color: #38b6ff;
+   color: white;
+   border: none;
+   
+   &:hover {
+     background-color: #2d91cc;
+   }
+ }
 `;
 
-export default function Featured({ products }) {
-  return (
-    <Bg>
-      <Center>
-        <ColumnsWrapper>
-          <div>
-            <Title>Adapta</Title>
-            <Subtitle>Bienvenido al mundo fungi</Subtitle>
-            <ButtonsWrapper>
-              <ButtonLink href={'/products'} outline={1} white={1}>Conoce todos nuestros productos</ButtonLink>
-            </ButtonsWrapper>
-          </div>
-          <Image src="/sticker-hongo.png" alt="Sticker de hongo" width={300} height={300} />
-        </ColumnsWrapper>
-      </Center>
-    </Bg>
-  );
+export default function Featured() {
+ return (
+   <Bg>
+     <Center>
+       <ContentWrapper>
+        <br></br>
+        <br></br>
+        <br></br>
+         <Title>Descubrí el poder de los hongos adaptógenos</Title>
+         <LogoWrapper>
+           <Image 
+             src="/logo-blanco.png" 
+             alt="Logo Adapta" 
+             width={180} 
+             height={60} 
+             priority
+           />
+         </LogoWrapper>
+         <ButtonsWrapper>
+           <ButtonLink href={'/products'}>
+             Conoce todos nuestros productos
+           </ButtonLink>
+         </ButtonsWrapper>
+       </ContentWrapper>
+     </Center>
+   </Bg>
+ );
 }

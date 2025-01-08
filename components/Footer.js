@@ -1,52 +1,91 @@
+// Footer.jsx
 import styled from "styled-components";
 import Link from "next/link";
+import Image from "next/image";
 
 const FooterContainer = styled.footer`
-  background-color: #222;
+  background-color: #000;
   color: white;
-  padding: 20px 0;
-  position: fixed-bot;
-  margin-top: 50px;
-  width: 100%;
-  bottom: 0;
+  padding: 40px 0 20px;
+  margin-top: 80px;
 `;
 
 const FooterContent = styled.div`
   max-width: 1200px;
   margin: 0 auto;
   padding: 0 20px;
-  text-align: center;
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 30px;
+  align-items: center;
+  
+  @media (min-width: 768px) {
+    grid-template-columns: 1fr 2fr 1fr;
+    text-align: left;
+  }
+`;
+
+const LogoContainer = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  
+  @media (min-width: 768px) {
+    justify-content: flex-start;
+  }
+  
+  img {
+    max-width: 120px;
+    height: auto;
+  }
 `;
 
 const FooterText = styled.p`
   margin: 0;
   font-size: 0.9rem;
-`;
-
-const FooterLinks = styled.div`
-  margin-top: 10px;
-
-  a {
-    color: white;
-    text-decoration: none;
-    margin: 0 10px;
-    font-size: 0.9rem;
-
-    &:hover {
-      text-decoration: underline;
-    }
+  color: #888;
+  text-align: center;
+  
+  @media (min-width: 768px) {
+    text-align: center;
   }
 `;
 
-const Logo = styled(Link)`
-  color: #fff;
-  text-decoration: none;
-  position: left;
-  z-index: 3;
+const FooterLinks = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 20px;
+  
+  @media (min-width: 768px) {
+    justify-content: flex-end;
+  }
+`;
 
-  img {
-    width: 150px;
-    height: auto;
+const FooterLink = styled(Link)`
+  color: white;
+  text-decoration: none;
+  font-size: 0.9rem;
+  transition: color 0.3s ease;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #38b6ff;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #38b6ff;
+    
+    &:after {
+      width: 100%;
+    }
   }
 `;
 
@@ -54,14 +93,24 @@ const Footer = () => {
   return (
     <FooterContainer>
       <FooterContent>
-      <Logo href="/">
-            <img src="/titulo-adapta.png" alt="img-titulo" className="img-titulo" />
-          </Logo>
-        <FooterText>&copy; {new Date().getFullYear()} Adapta. Todos los derechos reservados.</FooterText>
+        <LogoContainer>
+          <Image 
+            src="/titulo-adapta.png" 
+            alt="Adapta Logo" 
+            width={120}
+            height={40}
+            priority
+          />
+        </LogoContainer>
+        
+        <FooterText>
+          &copy; {new Date().getFullYear()} Adapta. Todos los derechos reservados.
+        </FooterText>
+        
         <FooterLinks>
-          <Link href="/">Política de Privacidad</Link>
-          <Link href="/">Términos de Servicio</Link>
-          <Link href="/">Contacto</Link>
+          <FooterLink href="/privacidad">Privacidad</FooterLink>
+          <FooterLink href="/terminos">Términos</FooterLink>
+          <FooterLink href="/contacto">Contacto</FooterLink>
         </FooterLinks>
       </FooterContent>
     </FooterContainer>

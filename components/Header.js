@@ -1,82 +1,139 @@
 import Link from "next/link";
 import styled from "styled-components";
-import Center from "@/components/Center";
+import { ShoppingCart, Menu } from 'lucide-react';
 import { useContext, useState } from "react";
 import { CartContext } from "@/components/CartContext";
-import BarsIcon from "@/components/icons/Bars";
-import Notificacion from "@/components/Notificacion"; // Importamos el componente de notificación
 
 const StyledHeader = styled.header`
-  background-color: #222;
-  color: white;
-  padding: 5px 0;
-  text-align: center;
+  background-color: #000;
   position: sticky;
   top: 0;
-  z-index: 1000; /* Asegura que el header esté por encima de otros elementos */
+  z-index: 1000;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 `;
 
-const Wrapper = styled.div`
+const HeaderContainer = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 1rem 2rem;
   display: flex;
+  align-items: center;
   justify-content: space-between;
-  padding: 20px 0;
-`;
-
-const StyledNav = styled.nav`
-  ${(props) => (props.mobileNavActive ? `display: block;` : `display: none;`)}
-  gap: 15px;
-  position: fixed;
-  top: 0;
-  bottom: 0;
-  left: 0;
-  right: 0;
-  padding: 70px 20px 20px;
-  background-color: #222;
-  @media screen and (min-width: 768px) {
-    display: flex;
-    position: static;
-    padding: 0;
-  }
-`;
-
-const NavLink = styled(Link)`
-  display: block;
-  color: white;
-  text-decoration: none;
-  margin-top: 9px;
-  padding: 10px 0;
-  font-size: 100%;
-  font-weight: bold;
-  font-family: "Montserrat", sans-serif;
-  @media screen and (min-width: 768px) {
-    padding: 0;
-  }
-`;
-
-const NavButton = styled.button`
-  background-color: transparent;
-  width: 30px;
-  height: 30px;
-  border: 0;
-  color: white;
-  cursor: pointer;
-  position: relative;
-  z-index: 3;
-  @media screen and (min-width: 768px) {
-    display: none;
-  }
 `;
 
 const Logo = styled(Link)`
-  color: #fff;
+  color: #38b6ff;
   text-decoration: none;
-  position: relative;
-  z-index: 3;
+  font-size: 1.5rem;
+  font-weight: bold;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #2d91cc;
+  }
 
   img {
     width: 150px;
     height: auto;
   }
+`;
+
+const StyledNav = styled.nav`
+  display: none;
+  gap: 2rem;
+  
+  @media (min-width: 768px) {
+    display: flex;
+    align-items: center;
+  }
+`;
+
+const NavLink = styled(Link)`
+  color: #fff;
+  text-decoration: none;
+  font-weight: 500;
+  transition: color 0.3s ease;
+  position: relative;
+  
+  &:after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: #38b6ff;
+    transition: width 0.3s ease;
+  }
+
+  &:hover {
+    color: #38b6ff;
+    
+    &:after {
+      width: 100%;
+    }
+  }
+`;
+
+const IconsContainer = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+`;
+
+const CartButton = styled(Link)`
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  transition: color 0.3s ease;
+  
+  &:hover {
+    color: #38b6ff;
+  }
+`;
+
+const MenuButton = styled.button`
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: block;
+  transition: color 0.3s ease;
+
+  @media (min-width: 768px) {
+    display: none;
+  }
+  
+  &:hover {
+    color: #38b6ff;
+  }
+`;
+
+const CartCount = styled.span`
+  background-color: #38b6ff;
+  color: #fff;
+  padding: 0.2rem 0.6rem;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: bold;
+`;
+
+const MobileNav = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #000;
+  padding: 6rem 2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  transform: ${({ isOpen }) => isOpen ? 'translateX(0)' : 'translateX(-100%)'};
+  transition: transform 0.3s ease;
+  z-index: 999;
 `;
 
 export default function Header() {
@@ -85,24 +142,35 @@ export default function Header() {
 
   return (
     <StyledHeader>
-      <Center>
-        <Wrapper>
-          <Logo href="/">
-            <img src="/titulo-adapta.png" alt="img-titulo" className="img-titulo" />
-          </Logo>
-          <StyledNav mobileNavActive={mobileNavActive}>
-            <NavLink href="/">Inicio</NavLink>
-            <NavLink href="/products">Todos los productos</NavLink>
-            <NavLink id="cart-title" href="/cart">
-              Tu carrito({cartProducts.length})
-            </NavLink>
-          </StyledNav>
-          <NavButton onClick={() => setMobileNavActive((prev) => !prev)}>
-            <BarsIcon />
-          </NavButton>
-        </Wrapper>
-      </Center>
-      <Notificacion /> {/* Añadimos el componente de notificación aquí */}
+      <HeaderContainer>
+        <Logo href="/">
+          <img src="/titulo-adapta.png" alt="Logo" />
+        </Logo>
+        
+        <StyledNav>
+          <NavLink href="/">Inicio</NavLink>
+          <NavLink href="/products">Productos</NavLink>
+          <NavLink href="/blog">Blog</NavLink>
+          <NavLink href="/contact">Contacto</NavLink>
+        </StyledNav>
+
+        <IconsContainer>
+          <CartButton href="/cart">
+            <ShoppingCart size={24} />
+            <CartCount>{cartProducts.length}</CartCount>
+          </CartButton>
+          <MenuButton onClick={() => setMobileNavActive(!mobileNavActive)}>
+            <Menu size={24} />
+          </MenuButton>
+        </IconsContainer>
+
+        <MobileNav isOpen={mobileNavActive}>
+          <NavLink href="/">Inicio</NavLink>
+          <NavLink href="/products">Productos</NavLink>
+          <NavLink href="/blog">Blog</NavLink>
+          <NavLink href="/contact">Contacto</NavLink>
+        </MobileNav>
+      </HeaderContainer>
     </StyledHeader>
   );
 }

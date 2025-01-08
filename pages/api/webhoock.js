@@ -22,7 +22,7 @@ mongoose.connect('MONGODB_URI', {
   console.error('Error connecting to MongoDB:', error);
 });
 
-router.post('/webhook', async (req, res) => {
+router.post('/webhoock', async (req, res) => {
   const headers = req.headers;
   const xSignature = headers['x-signature'];
   const xRequestId = headers['x-request-id'];

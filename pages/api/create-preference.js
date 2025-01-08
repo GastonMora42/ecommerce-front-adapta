@@ -37,7 +37,7 @@ export default async function handler(req, res) {
           failure: 'https://www.adaptalabs.com',
           pending: 'https://www.adaptalabs.com'
         },
-        notification_url: 'https://adaptalabs.com/api/webhoock?source_news=webhooks', // URL del webhook
+        notification_url: 'https://given-top-permanent-sur.trycloudflare.com/payment', // URL del webhook
       };
 
       const result = await preference.create({ body: preferenceBody });
